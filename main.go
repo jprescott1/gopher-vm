@@ -1,19 +1,33 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
+	"log"
+	"os"
+
+	"gopkg.in/yaml.v2"
 )
 
-func main() {
-	fmt.Println("Gopher VM")
+type Config struct {
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
 }
 
-func openFile() {
-	yamlFile, err := ioutil.ReadFile("config.yml")
+func main() {
+	log.Print("Aint got no job")
+
+	// Read yaml file
+	yamlData, err := os.ReadFile("definition.yaml")
 	if err != nil {
-		fmt.Println("Error reading YAML file: ", err)
-		return
+		log.Fatal(err)
 	}
-	fmt.Println("YAML file: ", string(yamlFile))
+
+	// Unmarshal yaml data
+	var config Config
+	err = yaml.Unmarshal(yamlData, &config)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Print data
+	log.Println("Host:", config.Host)
 }
